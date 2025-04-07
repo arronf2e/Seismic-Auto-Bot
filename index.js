@@ -193,13 +193,9 @@ async function deployTokenContract(tokenName, tokenSymbol, totalSupply) {
 }
 
 async function transferTokens(contractAddress, abi, numTransfers) {
-
-  const amountPerTransfer = (Math.floor(Math.random() * 21) + 10) * 10; // 随机
-
   try {
     displaySection("TRANSFERRING TOKENS");
     console.log(`📊 Number of transfers: ${colors.yellow}${numTransfers}${colors.reset}`);
-    console.log(`💸 Amount per transfer: ${colors.yellow}${amountPerTransfer}${colors.reset}`);
     console.log(`🎯 Contract address: ${colors.yellow}${contractAddress}${colors.reset}`);
 
     const privateKey = process.env.PRIVATE_KEY;
@@ -219,7 +215,9 @@ async function transferTokens(contractAddress, abi, numTransfers) {
 
     for (let i = 0; i < numTransfers; i++) {
       const recipient = generateRandomAddress();
+      const amountPerTransfer = (Math.floor(Math.random() * 21) + 10) * 10; // 随机
       const formattedAmount = ethers.utils.parseUnits(amountPerTransfer.toString(), 18);
+      console.log(`💸 Amount: ${colors.yellow}${amountPerTransfer}${colors.reset}`);
 
       try {
         const tx = await tokenContract.transfer(recipient, formattedAmount);
