@@ -138,13 +138,20 @@ async function faucet() {
 
 }
 
-async function deployTokenContract(tokenName, tokenSymbol, totalSupply) {
-  try {
-    const privateKey = process.env.PRIVATE_KEY;
-    if (!privateKey) {
-      throw new Error("Private key not found in .env file");
-    }
+async function getPks() {
+  const pkFilePath = path.join(__dirname, 'pk.txt');
+  if (!fs.existsSync(pkFilePath)) {
+    throw new Error("pk.txt file not found");
+  }
+  const privateKeys = fs.readFileSync(pkFilePath, 'utf8').split('\n').filter(pk => pk.trim());
+  if (privateKeys.length === 0) {
+    throw new Error("No private keys found in pk.txt");
+  }
+  return privateKeys;
+}
 
+async function deployTokenContract(privateKey, tokenName, tokenSymbol, totalSupply) {
+  try {
     displaySection("DEPLOYING TOKEN CONTRACT");
     console.log(`📝 Token Name: ${colors.yellow}${tokenName}${colors.reset}`);
     console.log(`🔤 Token Symbol: ${colors.yellow}${tokenSymbol}${colors.reset}`);
@@ -192,16 +199,11 @@ async function deployTokenContract(tokenName, tokenSymbol, totalSupply) {
   }
 }
 
-async function transferTokens(contractAddress, abi, numTransfers) {
+async function transferTokens(privateKey, contractAddress, abi, numTransfers) {
   try {
     displaySection("TRANSFERRING TOKENS");
     console.log(`📊 Number of transfers: ${colors.yellow}${numTransfers}${colors.reset}`);
     console.log(`🎯 Contract address: ${colors.yellow}${contractAddress}${colors.reset}`);
-
-    const privateKey = process.env.PRIVATE_KEY;
-    if (!privateKey) {
-      throw new Error("Private key not found in .env file");
-    }
 
     const provider = new ethers.providers.JsonRpcProvider("https://node-2.seismicdev.net/rpc");
     const wallet = new ethers.Wallet(privateKey, provider);
@@ -255,6 +257,39 @@ async function transferTokens(contractAddress, abi, numTransfers) {
   }
 }
 
+async function runBot() {
+  try {
+    try {
+      const totalSupply = 1000000000; // Example total supply, adjust as needed;
+      if (isNaN(totalSupply) || totalSupply <= 0) {
+        throw new Error("Total supply must be a positive number");
+      }
+      const privateKeys = await getPks();
+      for(let i = 0; i < privateKeys.length; i++){
+        const name = randomAnimalName(); // Example token name, adjust as needed;
+        const symbol = name?.split(' ')?.[0] || 'trump'; // Example token symbol, adjust as needed;
+        const numTransfers = Math.floor(Math.random() * 16) + 5; // 随机5-20的数
+        const { contractAddress, abi } = await deployTokenContract(privateKeys[i], name, symbol, totalSupply);
+        const transfers = parseInt(numTransfers);
+        await transferTokens(privateKeys[i], contractAddress, abi, transfers);
+        console.log(`\n${colors.green}🎉 All operations completed successfully!${colors.reset}`);
+      }
+    } catch (error) {
+      console.error(`${colors.red}❌ Error: ${error.message}${colors.reset}`);
+      rl.close();
+    }
+  } catch (error) {
+    console.error(`${colors.red}❌ An error occurred: ${error.message}${colors.reset}`);
+    rl.close();
+  }
+}
+
+function startScheduler() {
+  const interval = 24 * 60 * 60 * 1000; // 24小时
+  runBot(); // 立即执行一次
+  setInterval(runBot, interval);
+}
+
 async function main() {
   console.log("\n" + colors.cyan + colors.bright + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" + colors.reset);
   console.log(colors.cyan + colors.bright + "       SEISMIC TOKEN AUTO BOT - AIRDROP INSIDERS           " + colors.reset);
@@ -262,22 +297,7 @@ async function main() {
   console.log(`${colors.yellow}🌐 Network: Seismic devnet (Chain ID: 5124)${colors.reset}`);
 
   try {
-    try {
-      const totalSupply = 1000000000; // Example total supply, adjust as needed;
-      if (isNaN(totalSupply) || totalSupply <= 0) {
-        throw new Error("Total supply must be a positive number");
-      }
-      const name = randomAnimalName(); // Example token name, adjust as needed;
-      const symbol = name?.split(' ')?.[0] || 'trump'; // Example token symbol, adjust as needed;
-      const numTransfers = Math.floor(Math.random() * 16) + 5; // 随机5-20的数
-      const { contractAddress, abi } = await deployTokenContract(name, symbol, totalSupply);
-      const transfers = parseInt(numTransfers);
-      await transferTokens(contractAddress, abi, transfers);
-      console.log(`\n${colors.green}🎉 All operations completed successfully!${colors.reset}`);
-    } catch (error) {
-      console.error(`${colors.red}❌ Error: ${error.message}${colors.reset}`);
-      rl.close();
-    }
+    startScheduler();
   } catch (error) {
     console.error(`${colors.red}❌ An error occurred: ${error.message}${colors.reset}`);
     rl.close();
