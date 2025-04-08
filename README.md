@@ -2,6 +2,10 @@
 
 一个基于 Node.js 的工具，用于在 Seismic 开发网络上部署 ERC-20 兼容代币，并自动将代币转移到随机地址以进行测试和空投模拟。
 
+## 领水
+
+https://faucet-2.seismicdev.net/
+
 ## 功能
 
 - 一键在 Seismic 开发网络上部署代币
