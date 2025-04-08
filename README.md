@@ -1,82 +1,84 @@
-# Seismic Auto Bot - Airdrop Insiders
+# Seismic Auto Bot
 
-A Node.js tool for deploying ERC-20 compatible tokens on the Seismic devnet and automating token transfers to random addresses for testing and airdrop simulations.
+一个基于 Node.js 的工具，用于在 Seismic 开发网络上部署 ERC-20 兼容代币，并自动将代币转移到随机地址以进行测试和空投模拟。
 
-## Features
+## 功能
 
-- One-click token deployment on Seismic devnet
-- Automated token transfers to multiple addresses
-- Real-time transaction status updates
-- Simple interactive prompt-based interface
+- 一键在 Seismic 开发网络上部署代币
+- 自动将代币转移到多个地址
+- 实时交易状态更新
+- 简单的交互式提示界面
 
-## Prerequisites
+## 先决条件
 
-- Node.js (v14 or higher)
-- npm or yarn
-- A wallet with ETH on Seismic devnet
+- Node.js（v14 或更高版本）
+- npm 或 yarn
+- 在 Seismic 开发网络上拥有 ETH 的钱包
 
-## Installation
+## 安装
 
 ```bash
-# Clone the repository
+# 克隆仓库
 git clone https://github.com/airdropinsiders/Seismic-Auto-Bot.git
 
-# Navigate to the project directory
+# 进入项目目录
 cd Seismic-Auto-Bot
 
-# Install dependencies
+# 安装依赖
 npm install
 ```
 
-## Configuration
+## 配置
 
-Create a `.env` file in the root directory with your private key:
+在根目录下创建一个 `pk.txt` 文件，并填写你的私钥：
 
 ```
-PRIVATE_KEY=your_private_key_here
+pk1,
+pk2,
+...
 ```
 
-> ⚠️ **SECURITY WARNING**: Never share your private key or commit the .env file to GitHub.
+> ⚠️ **安全警告**: 切勿分享你的私钥或将 pk.txt 文件提交到 GitHub。
 
-## Usage
+## 使用
 
-Run the tool with:
+运行工具：
 
 ```bash
 node index.js
 ```
 
-The interactive CLI will guide you through:
+交互式 CLI 将引导你完成以下步骤：
 
-1. Token creation (name, symbol, total supply)
-2. Token deployment to Seismic devnet
-3. Optional: Automated token transfers to random addresses
+1. 代币创建（名称、符号、总供应量）
+2. 将代币部署到 Seismic 开发网络
+3. 可选：自动将代币转移到随机地址
 
-## Token Contract
+## 代币合约
 
-The script deploys a standard ERC-20 compatible token contract with the following features:
+该脚本部署了一个标准的 ERC-20 兼容代币合约，具有以下功能：
 
-- Token name, symbol, and decimals
-- Balance tracking for addresses
-- Transfer and approval functionality
-- Standard ERC-20 events
+- 代币名称、符号和小数位数
+- 地址余额跟踪
+- 转移和批准功能
+- 标准 ERC-20 事件
 
-## Network Information
+## 网络信息
 
-The tool connects to:
-- Network: Seismic devnet
-- Chain ID: 5124
-- RPC URL: https://node-2.seismicdev.net/rpc
-- Explorer: https://explorer-2.seismicdev.net/
+该工具连接到：
+- 网络：Seismic 开发网络
+- 链 ID：5124
+- RPC URL：https://node-2.seismicdev.net/rpc
+- 浏览器：https://explorer-2.seismicdev.net/
 
-## Contributors
+## 贡献者
 
-- Airdrop Insiders Team
+- 空投内幕团队
 
-## License
+## 许可证
 
-MIT License
+MIT 许可证
 
-## Support
+## 支持
 
-For any questions or support, please open an issue in this repository or contact the Airdrop Insiders team.
+如有任何问题或需要支持，请在本仓库中提交问题或联系空投内幕团队。
